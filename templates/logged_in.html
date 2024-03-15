@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Night Sky</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      color: #ffffff; /* Cor do texto */
+      font-family: Arial, sans-serif; /* Fonte do texto */
+    }
+
+    .stars {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #001f3f; /* Azul escuro */
+      z-index: -1;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background-color: #ffffff;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      from { transform: translateY(-10%); opacity: 0; }
+      to { transform: translateY(100vh); opacity: 1; }
+    }
+
+    /* Estilos para diferentes estrelas */
+    .star:nth-child(1) {
+      left: 5%;
+      animation-duration: 5s;
+    }
+
+    .star:nth-child(2) {
+      left: 15%;
+      animation-duration: 7s;
+    }
+
+    .star:nth-child(3) {
+      left: 25%;
+      animation-duration: 6s;
+    }
+
+    /* Estilo para o texto de boas-vindas */
+    .welcome-text {
+      text-align: center; /* Centralizar o texto */
+      font-size: 3em; /* Tamanho do texto */
+      margin-top: 40vh; /* Margem superior para posicionar verticalmente */
+      position: relative; /* Posição relativa */
+    }
+
+    /* Estilo para o botão */
+    .btn-container {
+      position: absolute; /* Posição absoluta */
+      left: 50%; /* Centralizar horizontalmente */
+      top: 20vh; /* Distância do topo */
+      transform: translateX(-50%); /* Ajustar a posição horizontal */
+    }
+
+    .btn {
+      background-color: #483D8B; /* Cor de fundo do botão */
+      color: #ffffff; /* Cor do texto do botão */
+      padding: 10px 20px; /* Espaçamento interno */
+      font-size: 1.5em; /* Tamanho do texto */
+      border: none; /* Remover borda */
+      cursor: pointer; /* Cursor ao passar por cima */
+      transition: background-color 0.3s; /* Transição de cor de fundo */
+      border-radius:10px;
+    }
+
+    /* Estilo para o botão no hover */
+    .btn:hover {
+      background-color: #7B68EE; /* Cor de fundo do botão no hover */
+    }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+
+  <!-- Botão -->
+  <div class="btn-container">
+    <button class="btn" onclick="redirectToChatbot()">Tuga-PT4</button>
+  </div>
+
+  <!-- Div para o texto de boas-vindas -->
+  <div class="welcome-text">
+    BEM VINDO <br> {{ username }}
+  </div>
+
+  <script>
+    // Função para redirecionar para a página do chatbot
+    function redirectToChatbot() {
+      window.location.href = '/chatbot'; // Redireciona para a página do chatbot
+    }
+
+    // Função para gerar estrelas aleatoriamente
+    function generateStars() {
+      const numStars = 100; // Número de estrelas
+      const container = document.querySelector('.stars');
+      for (let i = 0; i < numStars; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        star.style.left = Math.random() * 100 + 'vw'; // Posição horizontal aleatória
+        star.style.animationDuration = (Math.random() * 3 + 1) + 's'; // Duração da animação aleatória
+        container.appendChild(star);
+      }
+    }
+    // Chamar a função para gerar estrelas quando a página carregar
+    window.onload = generateStars;
+  </script>
+</body>
+</html>
