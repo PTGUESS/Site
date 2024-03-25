@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Login/Register Form | CodeLab</title>
+    <link rel="stylesheet" href="{{url_for('static',filename = 'css/style.css')}}" />
+    <style>
+        .wrapper {
+            width: 380px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px; /* Adicionando margem inferior */
+        }
+
+        .title {
+            font-size: 35px;
+            font-weight: 600;
+            line-height: 100px;
+            color: #fff;
+            user-select: none;
+            border-radius: 15px 15px 0 0;
+            background: linear-gradient(-135deg, #c850c0, #4158d0);
+            border-bottom: 2px solid #4158d0; /* Adicionando borda na parte inferior */
+            border-top: 2px solid #c850c0; /* Mantendo borda na parte superior */
+            margin-bottom: 20px; /* Adicionando margem inferior */
+        }
+
+        .options {
+            display: flex;
+            justify-content: center; /* Centralizando horizontalmente */
+        }
+
+        .options button {
+            padding: 10px 20px;
+            font-size: 20px;
+            border: none;
+            border-radius: 5px;
+            margin: 0 10px;
+            cursor: pointer;
+            background-color: #4158d0; /* Ajustando a cor dos botões */
+            color: #fff;
+        }
+
+        .options button:hover {
+            background-color: #6379f4; /* Ajustando a cor dos botões quando hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="title">Login/Register Form</div>
+        <div class="options">
+            <button type="button" onclick="location.href='/login'">Login</button>
+            <button type="button" onclick="location.href='/register'">Register</button>
+        </div>
+    </div>
+</body>
+</html>

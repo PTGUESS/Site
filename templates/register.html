@@ -1,0 +1,46 @@
+<!DOCTYPE html>´
+
+
+<!-- Created By CodingNepal -->
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8" />
+    <title>Login Form Design | CodeLab</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <style>
+        .wrapper .title {
+            font-size: 35px;
+            font-weight: 600;
+            text-align: center;
+            line-height: 100px;
+            color: #fff;
+            user-select: none;
+            border-radius: 15px 15px 0 0;
+            background: linear-gradient(-135deg, #c850c0, #4158d0);
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="title">Register Form</div>
+    <form action="/logged_in" method="POST"> <!-- Corrected form action -->
+        <div class="field">
+            <input type="text" name="username" required />
+            <label>Username</label>
+        </div>
+        <div class="field">
+            <input type="email" name="email" required />
+            <label>Email</label>
+        </div>
+        <div class="field">
+            <input type="password" name="password" required />
+            <label>Password</label>
+        </div>
+        <br>
+        <div class="field">
+            <input type="submit" value="Register" />
+        </div>
+    </form>
+</div>
+</body>
+</html>

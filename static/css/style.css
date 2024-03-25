@@ -31,7 +31,7 @@ body {
   line-height: 100px;
   color: #fff;
   user-select: none;
-  border-radius: 15px 15px 0 0;
+  border-radius: 15px 15px 15px 15px;
   background: linear-gradient(-135deg, #c850c0, #4158d0);
 }
 .wrapper form {

@@ -1,56 +1,90 @@
-from flask import Flask, render_template, request
-from openpyxl import load_workbook
-import openai
+from flask import Flask, render_template, redirect, url_for, request
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired, Email, EqualTo
+import pandas as pd
+import os
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'your_secret_key'
 
-# Função para verificar se o email já existe no arquivo Excel
-def check_existing_email(email):
-    try:
-        wb = load_workbook('user_data.xlsx')
-        ws = wb.active
-        existing_emails = [row[0].value for row in ws.iter_rows(min_row=2, max_col=1)]
-        return email in existing_emails
-    except FileNotFoundError:
-        return False  # Se o arquivo não existe, o email não pode existir
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    return render_template('index.html')
 
-# Função para salvar o email, senha e nome de usuário em um arquivo Excel local
+class RegistrationForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Sign Up')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        email = form.email.data
+        password = form.password.data
+        if save_credentials_to_excel(username, email, password):
+            return redirect(url_for('logged_in'))
+        else:
+            return render_template('register.html', form=form, message='Username or email already exists.')
+    return render_template('register.html', form=form)
+
+def check_existing_credentials(email, password):
+    if os.path.exists('user_data.xlsx'):
+        df = pd.read_excel('user_data.xlsx')
+        print("Existing Emails:", df['Email'].values)
+        print("Existing Passwords:", df['Password'].values)
+        if (df['Email'] == email).any() or (df['Password'] == password).any():
+            return True
+    return False
+
 def save_credentials_to_excel(username, email, password):
-    if not check_existing_email(email):
+    if not check_existing_credentials(email, password):
         try:
-            wb = load_workbook('user_data.xlsx')
-            ws = wb.active
-        except FileNotFoundError:
-            wb = Workbook()
-            ws = wb.active
-            ws.append(['Username', 'Email', 'Password'])
-        ws.append([username, email, password])
-        wb.save('user_data.xlsx')
-        return True  # Retorna True se os dados forem salvos com sucesso
+            if os.path.exists('user_data.xlsx'):
+                df = pd.read_excel('user_data.xlsx')
+            else:
+                df = pd.DataFrame(columns=['Username', 'Email', 'Password'])
+            new_data = pd.DataFrame([[username, email, password]], columns=['Username', 'Email', 'Password'])
+            df = pd.concat([df, new_data], ignore_index=True)
+            df.to_excel('user_data.xlsx', index=False)
+            return True
+        except Exception as e:
+            return False
     else:
-        return False  # Retorna False se o email já existir
+        return False
 
 
-@app.route('/logado', methods=['POST'])
-def logado():
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+  return render_template('login.html')
+# 
+@app.route('/chatbot')
+def chatbot():
+    return render_template('chatbot.html')
+
+@app.route('/logged_in', methods=['GET', 'POST'])
+def logged_in():
     if request.method == 'POST':
         username = request.form.get("username")
         email = request.form.get("email")
         password = request.form.get("password")
-        if save_credentials_to_excel(username, email, password):
-            return render_template('logged_in.html', email=email)
+        print(f"Received data - Username: {username}, Email: {email}, Password: {password}")
+        if os.path.exists('user_data.xlsx'):
+            df = pd.read_excel('user_data.xlsx')
         else:
-            return render_template('registration_failed.html', message="Email already exists")
-    else:
-        return "Method Not Allowed", 405
-    
-@app.route('/')
-def index():
-    return render_template('login.html')
+            df = pd.DataFrame(columns=['Username', 'Email', 'Password'])
+        new_data = pd.DataFrame([[username, email, password]], columns=['Username', 'Email', 'Password'])
+        df = pd.concat([df, new_data], ignore_index=True)
+        df.to_excel('user_data.xlsx', index=False)
+        return render_template('logged_in.html', username=username)
+    else : 
+        return render_template('logged_in.html', teste = request.args.get("email"), username = "pires")
 
-@app.route('/chatbot')
-def chatbot():
-    return render_template('chatbot.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
